@@ -18,27 +18,58 @@ function App() {
   );
 
   async function handleWoodFetchButtonClick() {
-    //DB에서 woods 테이블 정보를 불러옵니다
     const response = await dbApi.getWoods();
     setWoodList(response.data);
   }
 
-  function handleAddWoodSubmit(e) {
+  async function handleAddWoodSubmit(e) {
     e.preventDefault();
+
     const woodName = woodNameInputRef.current.value;
     const woodDesc = woodDescInputRef.current.value;
     const woodPrice = woodPriceInputRef.current.value;
 
-    console.log(
-      'woodName',
-      woodName,
-      'woodDesc',
-      woodDesc,
-      'woodPrice',
-      woodPrice
+    e.target.reset();
+
+    const response = await dbApi.addWood({
+      name: woodName,
+      desc: woodDesc,
+      price: woodPrice,
+      //id: be filled by db
+      //created_at: be filled by db
+    });
+
+    //refresh the local state with newly added wood
+    const newlyAddedWood = response.data[0];
+    setWoodList(prevList => [...prevList, newlyAddedWood]);
+  }
+
+  async function handleDeleteWoodButtonClick(woodId) {
+    await dbApi.deleteWood(woodId);
+
+    setWoodList(prevList =>
+      prevList.filter(wood => wood.id !== woodId)
     );
   }
 
+  async function handleUpdateWoodButtonClick(woodToUpdate) {
+    const woodName = woodNameInputRef.current.value;
+    const woodDesc = woodDescInputRef.current.value;
+    const woodPrice = woodPriceInputRef.current.value;
+
+    const response = await dbApi.updateWood({
+      ...woodToUpdate,
+      name: woodName || woodToUpdate.name,
+      desc: woodDesc || woodToUpdate.desc,
+      price: woodPrice || woodToUpdate.price,
+    });
+
+    setWoodList(prevList =>
+      prevList.map(wood =>
+        wood.id === woodToUpdate.id ? response.data[0] : wood
+      )
+    );
+  }
   return (
     <main>
       <button onClick={handleWoodFetchButtonClick}>
@@ -57,6 +88,16 @@ function App() {
               <p>name {wood.name}</p>
               <p>price {wood.price}</p>
               <p>desc {wood.desc}</p>
+              <button
+                onClick={() => handleUpdateWoodButtonClick(wood)}
+              >
+                수정하기
+              </button>
+              <button
+                onClick={() => handleDeleteWoodButtonClick(wood.id)}
+              >
+                삭제하기
+              </button>
             </li>
           ))}
         </ol>
