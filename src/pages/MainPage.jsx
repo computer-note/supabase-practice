@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import useInput from './../hooks/useInput';
-import dbApi from './../supabase/supabase';
+import woodDbApi from '../supabase/woodDbApi';
 
 function MainPage() {
   const [woodList, setWoodList] = useState([]);
@@ -18,7 +18,7 @@ function MainPage() {
   );
 
   async function handleWoodFetchButtonClick() {
-    const response = await dbApi.getWoods();
+    const response = await woodDbApi.getWoods();
     setWoodList(response.data);
   }
 
@@ -31,7 +31,7 @@ function MainPage() {
 
     e.target.reset();
 
-    const response = await dbApi.addWood({
+    const response = await woodDbApi.addWood({
       name: woodName,
       desc: woodDesc,
       price: woodPrice,
@@ -45,7 +45,7 @@ function MainPage() {
   }
 
   async function handleDeleteWoodButtonClick(woodId) {
-    await dbApi.deleteWood(woodId);
+    await woodDbApi.deleteWood(woodId);
 
     setWoodList(prevList =>
       prevList.filter(wood => wood.id !== woodId)
@@ -57,7 +57,7 @@ function MainPage() {
     const woodDesc = woodDescInputRef.current.value;
     const woodPrice = woodPriceInputRef.current.value;
 
-    const response = await dbApi.updateWood({
+    const response = await woodDbApi.updateWood({
       ...woodToUpdate,
       name: woodName || woodToUpdate.name,
       desc: woodDesc || woodToUpdate.desc,
