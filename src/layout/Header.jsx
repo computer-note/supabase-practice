@@ -9,6 +9,7 @@ function Header() {
         <Link to='/login'>LoginPage</Link>
         <Link to='/signup'>SignupPage</Link>
         <Link to='/auth-test'>AuthTestPage</Link>
+        <Link to='/hook-test'>HookTestPage</Link>
       </nav>
     </header>
   );
