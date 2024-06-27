@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import AuthTestPage from '../pages/AuthTestPage';
 import Layout from './../layout/Layout';
+import HookTestPage from '../pages/HookTestPage';
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignupPage />} />
             <Route path='/auth-test' element={<AuthTestPage />} />
+            <Route path='/hook-test' element={<HookTestPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
